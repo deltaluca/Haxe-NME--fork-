@@ -26,6 +26,17 @@ public:
    ImagePoint mOrigin;
 };
 
+class ColorMatrixFilter : public Filter {
+public:
+	ColorMatrixFilter(int inQuality, double* cmx);
+
+   void Apply(const Surface *inSrc,Surface *outDest,ImagePoint inSrc0, ImagePoint inDiff,int inPass) const;
+   void ExpandVisibleFilterDomain(Rect &ioRect,int inPass) const;
+   void GetFilteredObjectRect(Rect &ioRect,int inPass) const;
+
+	double cmx[20];
+};
+
 class BlurFilter : public Filter
 {
 public:

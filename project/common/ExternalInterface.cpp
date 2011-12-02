@@ -65,6 +65,7 @@ static int _id_blurX;
 static int _id_blurY;
 static int _id_quality;
 static int _id_align;
+static int _id_cmx;
 static int _id_blockIndent;
 static int _id_bold;
 static int _id_bullet;
@@ -136,6 +137,7 @@ extern "C" void InitIDs()
    _id_blurY = val_id("blurY");
    _id_quality = val_id("quality");
    _id_align = val_id("align");
+	_id_cmx = val_id("cmx");
    _id_blockIndent = val_id("blockIndent");
    _id_bold = val_id("bold");
    _id_bullet = val_id("bullet");
@@ -310,6 +312,11 @@ Filter *FilterFromValue(value filter)
           (int)val_field_numeric(filter,_id_blurX),
           (int)val_field_numeric(filter,_id_blurY) ) );
    }
+   else if (type==L"ColorMatrixFilter") {
+		return( new ColorMatrixFilter( q,
+			val_array_double(val_field(filter, _id_cmx))
+			) );
+	}
    else if (type==L"DropShadowFilter")
    {
       return( new DropShadowFilter( q,

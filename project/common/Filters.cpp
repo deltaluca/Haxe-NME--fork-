@@ -33,6 +33,38 @@ Surface *ExtractAlpha(const Surface *inSurface)
    return result;
 }
 
+// --- ColorMatrixFilter ---------------------------------------------------------
+
+ColorMatrixFilter::ColorMatrixFilter(int inquality, double* cmx) : Filter(inQuality) {
+	for(int i = 0; i<20; i++) this->cmx[i] = cmx[i];
+}
+
+void ColorMatrixFilter::ExpandVisibleFilterDomain(Rect &ioRect,int inPass) const {}
+void ColorMatrixFilter::GetFilteredObjectRect(Rect &ioRect,int inPass) const {}
+
+double clamp01(double x) { return x<0 ? 0 : x>1 ? 1 : x; }
+
+void ColorMatrixFilter::Apply(const Surface *inSrc,Surface *outDest,ImagePoint inSrc0,ImagePoint inDiff,int inPass) const {
+	for(int y = 0; y<outDest->Height(); y++) {
+		const uint8* in = inSrc->Row(y);
+		uint8* out = const_cast<uint8*>(outDest->Row(y));
+		for(int x = 0; x<outDest->Width()*4; x+=4) {
+			double inr = double(in[x])/255.0;
+			double ing = double(in[x+1])/255.0;
+			double inb = double(in[x+2])/255.0;
+
+			double outr = clamp01(inr * cmx[0] + ing * cmx[1] + inb * cmx[2] + cmx[4]);
+			double outg = clamp01(inr * cmx[5] + ing * cmx[6] + inb * cmx[7] + cmx[9]);
+			double outb = clamp01(inr * cmx[10]+ ing * cmx[11]+ inb * cmx[12]+ cmx[14]);
+
+			out[x] = uint8(outr*255.0);
+			out[x+1] = uint8(outg*255.0);
+			out[x+2] = uint8(outb*255.0);
+			out[x+3] = in[x+3]; //copy alpha for now
+		}
+	}
+}
+
 /*
  
    The BlurFilter has its size, mBlurX, mBlurY.  These are the "extra" pixels
