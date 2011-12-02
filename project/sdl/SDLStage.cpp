@@ -235,7 +235,7 @@ public:
 
    void Resize(int inWidth,int inHeight)
    {
-      #ifndef __APPLE__
+/*      #ifndef __APPLE__
 	  #ifndef WEBOS
       if (mIsOpenGL)
       {
@@ -246,7 +246,10 @@ public:
       }
       else
 	  #endif
-      #endif
+      #endif*/
+//
+//   ^^ removed as it fails under linux
+//
       {
          // Calling this recreates the gl context and we loose all our textures and
          // display lists. So Work around it.
