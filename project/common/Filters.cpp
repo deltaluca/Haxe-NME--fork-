@@ -35,7 +35,7 @@ Surface *ExtractAlpha(const Surface *inSurface)
 
 // --- ColorMatrixFilter ---------------------------------------------------------
 
-ColorMatrixFilter::ColorMatrixFilter(int inquality, double* cmx) : Filter(inQuality) {
+ColorMatrixFilter::ColorMatrixFilter(int inQuality, double* cmx) : Filter(inQuality) {
 	for(int i = 0; i<20; i++) this->cmx[i] = cmx[i];
 }
 
