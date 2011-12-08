@@ -26,7 +26,15 @@ class AndroidInstaller extends InstallerBase {
 		
 		for (javaPath in javaPaths) {
 			
-			recursiveCopy (javaPath, destination + "/src", true);
+			if (FileSystem.isDirectory (javaPath)) {
+				
+				recursiveCopy (javaPath, destination + "/src", true);
+				
+			} else {
+				
+				copyIfNewer (javaPath, destination + "/src/" + Path.withoutDirectory (javaPath));
+				
+			}
 			
 		}
 		

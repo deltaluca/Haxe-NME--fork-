@@ -5,6 +5,7 @@ import data.Asset;
 import data.Icon;
 import data.Icons;
 import data.NDLL;
+import haxe.Stack;
 import haxe.Template;
 import haxe.xml.Fast;
 import neko.io.File;
@@ -129,6 +130,7 @@ class InstallerBase {
 		if (command == "run" || command == "rerun" || command == "test") {
 			
 			print ("----- RUN -----");
+			
 			run ();
 			
 		}
@@ -401,6 +403,7 @@ class InstallerBase {
 		setDefault ("BUILD_DIR", "bin");
 		setDefault ("DOCS_DIR", "docs");
 		defines.set ("target_" + target, "1");
+		defines.set (target, "1");
 		defines.set ("target" , target);
 		
 	}
@@ -1043,7 +1046,21 @@ class InstallerBase {
 	
 	private function runCommand (path:String, command:String, args:Array <String>):Void {
 		
-		InstallTool.runCommand (path, command, args);
+		try {
+			
+			InstallTool.runCommand (path, command, args);
+			
+		} catch (e:Dynamic) {
+			
+			if (InstallTool.verbose) {
+				
+				Lib.rethrow (e);
+				
+			}
+			
+			Sys.exit (1);
+			
+		}
 	  
 	}
 	
